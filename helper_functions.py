@@ -29,14 +29,14 @@ def total_energy(particle_dict, tile_range, p):
                 for tile_x in range(-tile_range, tile_range+1):
                     for tile_y in range(-tile_range, tile_range+1):
                         distance = find_distance(particle_main, particle_influence, particle_dict, tile_x, tile_y)
-                        energy += 0.5/distance**(p-1)
+                        energy += 0.5/distance**(p)
     return energy
                         
 # finds the gradient of the energy function between two particles
 def energy_derivative(particle_main, particle_influence, particle_dict, tile_x, tile_y, p):
     distance = find_distance(particle_main, particle_influence, particle_dict, tile_x, tile_y)
-    x_component = -(tile_x + particle_dict[particle_main].x - particle_dict[particle_influence].x)/distance**p
-    y_component = -(tile_y + particle_dict[particle_main].y - particle_dict[particle_influence].y)/distance**p
+    x_component = -(tile_x + particle_dict[particle_main].x - particle_dict[particle_influence].x)/distance**(p+1)
+    y_component = -(tile_y + particle_dict[particle_main].y - particle_dict[particle_influence].y)/distance**(p+1)
     return np.array([x_component, y_component])
 
 # for given main particle, sums the gradient of the energy function over all influencing particles
