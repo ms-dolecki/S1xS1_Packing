@@ -23,7 +23,7 @@
 `ITERATIONS` is an integer value for the number of iterations of gradient descent to be run.  
 After iterating `SEARCH_BLOCK_ITERATIONS`, the program will set the configuration to the best-known solution found up to that point and then continue the gradient descent. Set this value to a fifth or tenth of the total number of iterations.  
 `ANIMATE` is a boolean that determines whether to animate each step of the gradient descent. Set to True to animate.  
-`BOUNDING_CIRCLES` is a boolean that tells the program to draw maximum bounding circles at the end of the program if set to True
+`BOUNDING_CIRCLES` is a boolean that tells the program to draw maximum bounding circles at the end of the program if set to True.
 
 # Output
 The program will print a statement every time `SEARCH_BLOCK_ITERATIONS` run and will also print two values at the end of the run to evaluate the eveness of the packing. The first is the total area of the bounding circles in one tile of $S^{1} \times S^{1}$, assuming said tile is of dimension 1x1. Bounding circles are expanded uniformally from each point until they hit other bounding circles. The second is the normalized variance of the radii of the bounding circles, assuming the average radius is 1.  
