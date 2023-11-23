@@ -100,12 +100,3 @@ radius_variance = normalized_radius_variance(particle_dict)
 print('Total circle area (in 1x1 S1xS1) = ' + str(circle_area) + '. Normalized radius variance (average radius 1) = ' + str(radius_variance))
 plt.draw()
 plt.show()
-
-
-
-
-
-
-    
-
-    
