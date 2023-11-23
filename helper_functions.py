@@ -96,13 +96,17 @@ def pair_nearest_neighbors(particle_dict):
                             found_pair = True
     return found_pair
 
-# for given main particle finds the radius of the bounding circle                                               
+# sets the radius of the bounding circle for all particles                                              
 def set_radii(particle_dict):
     for particle_main in particle_dict:
         find_nearest_neighbor(particle_main, particle_dict)
     while pair_nearest_neighbors(particle_dict):
         for particle_main in particle_dict:
             find_nearest_neighbor(particle_main, particle_dict)
+    # sort particles by radius
+    sorted_particle_dict = dict(sorted(particle_dict.items(), key=lambda item: item.radius))
+    for particle_main in sorted_particle_dict:
+        find_nearest_neighbor(particle_main, sorted_particle_dict)
 
 # finds total area of bounding circles in S1xS1`            
 def total_circle_area(particle_dict):
