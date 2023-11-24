@@ -1,5 +1,7 @@
 import math
 import numpy as np
+import sys
+import random
 
 class Particle:
     def __init__(self, id_value, x_value, y_value):
@@ -29,14 +31,21 @@ def total_energy(particle_dict, tile_range, p):
                 for tile_x in range(-tile_range, tile_range+1):
                     for tile_y in range(-tile_range, tile_range+1):
                         distance = find_distance(particle_main, particle_influence, particle_dict, tile_x, tile_y)
-                        energy += 0.5/distance**(p)
+                        if distance**(p-1) > 0:
+                            energy += 0.5/distance**(p-1)
+                        else:
+                            energy = sys.float_info.max
     return energy
                         
 # finds the gradient of the energy function between two particles
 def energy_derivative(particle_main, particle_influence, particle_dict, tile_x, tile_y, p):
     distance = find_distance(particle_main, particle_influence, particle_dict, tile_x, tile_y)
-    x_component = -(tile_x + particle_dict[particle_main].x - particle_dict[particle_influence].x)/distance**(p+1)
-    y_component = -(tile_y + particle_dict[particle_main].y - particle_dict[particle_influence].y)/distance**(p+1)
+    if distance**(p+1) > 0:
+        x_component = -(tile_x + particle_dict[particle_main].x - particle_dict[particle_influence].x)/distance**(p+1)
+        y_component = -(tile_y + particle_dict[particle_main].y - particle_dict[particle_influence].y)/distance**(p+1)
+    else:
+        x_component = random.random()
+        y_component = random.random()
     return np.array([x_component, y_component])
 
 # for given main particle, sums the gradient of the energy function over all influencing particles
@@ -51,7 +60,7 @@ def update_particle_derivative(particle_main, particle_dict, tile_range, p):
     particle_dict[particle_main].dx = particle_main_energy_derivative[0]
     particle_dict[particle_main].dy = particle_main_energy_derivative[1]
 
-# updates net energy gradient for all partricles
+# updates net energy gradient for all particles
 def update_all_particle_derivatives(particle_dict, tile_range, p):
     for particle_main in particle_dict:
         update_particle_derivative(particle_main, particle_dict, tile_range, p)
@@ -64,7 +73,7 @@ def update_particle_positions(particle_dict, sensitivity):
         particle_dict[particle].x = particle_dict[particle].x % 1
         particle_dict[particle].y = particle_dict[particle].y % 1
 
-# for given main particle finds influenceing particle which limits main particle's bounding radius      
+# for given main particle finds influencing particle which limits main particle's bounding radius      
 def find_nearest_neighbor(particle_main, particle_dict):
     radius = 1
     if not particle_dict[particle_main].radius_set:
@@ -104,9 +113,9 @@ def set_radii(particle_dict):
         for particle_main in particle_dict:
             find_nearest_neighbor(particle_main, particle_dict)
     # sort particles by radius
-    sorted_particle_dict = dict(sorted(particle_dict.items(), key=lambda item: item[1].radius))
-    for particle_main in sorted_particle_dict:
-        find_nearest_neighbor(particle_main, sorted_particle_dict)
+    radius_sorted_particles = sorted(particle_dict.items(), key=lambda item: item[1].radius)
+    for particle_main in radius_sorted_particles:
+        find_nearest_neighbor(particle_main[1].particle_id, particle_dict, True)
 
 # finds total area of bounding circles in S1xS1`            
 def total_circle_area(particle_dict):
@@ -116,6 +125,7 @@ def total_circle_area(particle_dict):
     area = area*math.pi
     return area
 
+# finds average radius of bounding circles in S1xS1
 def average_circle_radius(particle_dict):
     radius = 0
     for particle in particle_dict:
@@ -123,6 +133,7 @@ def average_circle_radius(particle_dict):
     radius = radius/len(particle_dict)
     return radius
 
+# nomralizing average radius to 1, find the variance of bounding circle radii in S1xS1
 def normalized_radius_variance(particle_dict):
     variance = 0
     average_radius = average_circle_radius(particle_dict)
