@@ -74,9 +74,10 @@ def update_particle_positions(particle_dict, sensitivity):
         particle_dict[particle].y = particle_dict[particle].y % 1
 
 # for given main particle finds influencing particle which limits main particle's bounding radius      
-def find_nearest_neighbor(particle_main, particle_dict):
+def find_nearest_neighbor(particle_main, particle_dict, set_radius):
     radius = 1
     if not particle_dict[particle_main].radius_set:
+        particle_dict[particle_main].radius_set = set_radius
         for particle_influence in particle_dict:
             if particle_influence != particle_main:
                 for tile_x in range(-1,2):
