@@ -104,7 +104,7 @@ def set_radii(particle_dict):
         for particle_main in particle_dict:
             find_nearest_neighbor(particle_main, particle_dict)
     # sort particles by radius
-    sorted_particle_dict = dict(sorted(particle_dict.items(), key=lambda item: item.radius))
+    sorted_particle_dict = dict(sorted(particle_dict.items(), key=lambda item: item[1].radius))
     for particle_main in sorted_particle_dict:
         find_nearest_neighbor(particle_main, sorted_particle_dict)
 
