@@ -109,10 +109,10 @@ def pair_nearest_neighbors(particle_dict):
 # sets the radius of the bounding circle for all particles                                              
 def set_radii(particle_dict):
     for particle_main in particle_dict:
-        find_nearest_neighbor(particle_main, particle_dict)
+        find_nearest_neighbor(particle_main, particle_dict, False)
     while pair_nearest_neighbors(particle_dict):
         for particle_main in particle_dict:
-            find_nearest_neighbor(particle_main, particle_dict)
+            find_nearest_neighbor(particle_main, particle_dict, False)
     # sort particles by radius
     radius_sorted_particles = sorted(particle_dict.items(), key=lambda item: item[1].radius)
     for particle_main in radius_sorted_particles:
