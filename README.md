@@ -39,3 +39,7 @@ Total circle area (in 1x1 S1xS1) = 0.785012559394. Normalized radius variance (a
 ```
 <img width="486" alt="Screen Shot 2023-11-22 at 12 55 29 AM" src="https://github.com/ms-dolecki/S1xS1_Packing/assets/151703986/c878c396-afb3-451e-823c-faa35983989b">
 
+# Theory
+One easy way to arrange points on $S^{1} \times S^{1}$ is with a lattice. If a lattice is compatible it will be possible to draw a square between four of points as in the picture below
+<img width="413" alt="Screen Shot 2023-11-27 at 1 25 04 PM" src="https://github.com/ms-dolecki/S1xS1_Packing/assets/151703986/69e20145-fac7-4dd1-a435-7337b830ea9e">
+
