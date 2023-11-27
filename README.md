@@ -26,7 +26,7 @@ After iterating `SEARCH_BLOCK_ITERATIONS`, the program will set the configuratio
 `BOUNDING_CIRCLES` is a boolean that tells the program to draw maximum bounding circles at the end of the program if set to True.
 
 # Output
-The program will print a statement every time `SEARCH_BLOCK_ITERATIONS` run and will also print two values at the end of the run to evaluate the eveness of the packing. The first is the total area of the bounding circles in one tile of $S^{1} \times S^{1}$, assuming said tile is of dimension 1x1. Bounding circles are expanded uniformally from each point until they hit other bounding circles. The second is the normalized variance of the radii of the bounding circles, assuming the average radius is 1.  
+The program will print a statement every time `SEARCH_BLOCK_ITERATIONS` run and will also print two values at the end of the run to evaluate the evenness of the packing. The first is the total area of the bounding circles in one tile of $S^{1} \times S^{1}$, assuming said tile is of dimension 1x1. Bounding circles are expanded uniformally from each point until they hit other bounding circles. The second is the normalized variance of the radii of the bounding circles, assuming the average radius is 1.  
 Sample output:  
 ```
 python s1xs1_pack.py --number_of_particles 8  --tile_range 2 --sensitivity 4 --decay 1.01 --iterations 5000 --search_block_iterations 1000 --animate True --bounding_circles True --force_order 5
@@ -40,6 +40,12 @@ Total circle area (in 1x1 S1xS1) = 0.785012559394. Normalized radius variance (a
 <img width="486" alt="Screen Shot 2023-11-22 at 12 55 29 AM" src="https://github.com/ms-dolecki/S1xS1_Packing/assets/151703986/c878c396-afb3-451e-823c-faa35983989b">
 
 # Theory
-One easy way to arrange points on $S^{1} \times S^{1}$ is with a lattice. If a lattice is compatible it will be possible to draw a square between four of points as in the picture below
+One easy way to arrange points on $S^{1} \times S^{1}$ is with a lattice. If a lattice is compatible it will be possible to draw a square from four points in the lattice as in the picture below:
+
 <img width="413" alt="Screen Shot 2023-11-27 at 1 25 04 PM" src="https://github.com/ms-dolecki/S1xS1_Packing/assets/151703986/69e20145-fac7-4dd1-a435-7337b830ea9e">
 
+In orange and red are the lattice axes connecting three of the points in the square. The triangles formed from these axes and the sides of the square can be arranged into a quadralateral with two right angles:
+
+<img width="276" alt="Screen Shot 2023-11-27 at 1 54 05 PM" src="https://github.com/ms-dolecki/S1xS1_Packing/assets/151703986/4e3c3ee9-76df-438a-bb68-4e7c0105b76a">
+
+If the lattice is not regular then the spacing of points along the orange sides will not match that along the green sides. Let $\vec{A} \coloneqq (a_1,a_2) \in \mathbb{Z} \times \mathbb{Z}$ denote the pair of green lengths (let indices denote left-right order, so $a_1$ refers to the left-most green side and $a_2$ the right-most), where unit distance is the distance between points along the green axis, and $\vec{B} \coloneqq (b_1,b_2) \in \mathbb{Z} \times \mathbb{Z}$ denote the pair of orange lengths, where unit distance is the distance between points along the green axis. Let the distance between points along the green axis be the unit length on the quadralateral. Then the distance between points on the orange sides is $\frac{\lVert\vec{B}\rVert}{\lVert\vec{A}\rVert}$ and the left-right diaganal has length $\lVert\vec{A}\rVert$. To get the length of the up-down diaganal, $L$, the side length of the square, we can use the law of sines. Specifically, if $\alpha,\beta$ denote the interior angeles of the left and right vertices, $L=\lVert\vec{A}\rVert \cdot \sin{\alpha}=\lVert\vec{A}\rVert \cdot \sin{\beta}$. If u were to scale down the quadralateral by a factor of $\lVert\vec{A}\rVert$, the length of the sides would become equal to the sines of the opposite interior angle on the corresponding green-or-orange right triangle. From this and the law of cosines we can get 
