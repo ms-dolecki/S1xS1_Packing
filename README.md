@@ -16,7 +16,7 @@
 
  # Parameters
 `NUMBER_OF_PARTICLES` (default 1) is an integer value for the number of points u wish to pack.  
-`TILE_RANGE` (default 2)is an integer value that tells the program the range of $S^{1} \times S^{1}$ tiles to consider interactions between. If set to 1, only particles from the same or adjacent tiles will influence eachother.  
+`TILE_RANGE` (default 2) is an integer value that tells the program the range of $S^{1} \times S^{1}$ tiles to consider interactions between. If set to 1, only particles from the same or adjacent tiles will influence eachother.  
 `FORCE_ORDER` (default 6) is a float which determines the strength of particle interactions. For particles distance $D$ apart, the repulsive force is $\frac{1}{D^{p+1}}$. Seting this between 3 and 7 seems to work well.  
 `SENSITIVITY` (default 0.0001) is a float which determines the speed of the gradient descent. The best value for this paramater seems to vary with the number of points as well as the `DECAY` paramter below. If `DECAY` is large enough then `SENSITIVITY` will drop very fast and so can be set initially high with a value maybe between 1 and 5. If `DECAY` is very small then it is best to start with a small `SENSITIVITY`, potentially on the order of ~0.00001.  
 `DECAY` (default 1.005) is a float which determines the factor by which the `SENSITIVITY` value is reduced after each iteration of the gradient descent. This should be $1+\epsilon$.  
