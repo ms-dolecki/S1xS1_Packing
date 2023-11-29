@@ -3,21 +3,22 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from helper_functions import *
 import argparse
+import time
 
 # get options from command line
 parser = argparse.ArgumentParser(
                     prog='S1xS1_Packing',
                     description='Packs n points ~evenly in S1xS1')                  
-parser.add_argument('--number_of_particles', type=int)
-parser.add_argument('--force_order', type=float)
-parser.add_argument('--tile_range', type=int)
-parser.add_argument('--sensitivity', type=float)
-parser.add_argument('--decay', type=float)
-parser.add_argument('--iterations', type=int)
-parser.add_argument('--search_block_iterations', type=int)
-parser.add_argument('--animate', type=bool)
-parser.add_argument('--bounding_circles', type=bool)
-
+parser.add_argument('--number_of_particles', type=int, default=1)
+parser.add_argument('--force_order', type=float, default=6)
+parser.add_argument('--tile_range', type=int, default=2)
+parser.add_argument('--sensitivity', type=float, default=0.0001)
+parser.add_argument('--decay', type=float, default=1.005)
+parser.add_argument('--iterations', type=int, default=0)
+parser.add_argument('--search_block_iterations', type=int, default=100)
+parser.add_argument('--animate', action='store_true')
+parser.add_argument('--bounding_circles', action='store_true')
+parser.add_argument('--lattice', action='store_true')
 args = parser.parse_args()
 
 number_of_particles = args.number_of_particles
@@ -29,16 +30,27 @@ iterations = args.iterations
 search_block_iterations = args.search_block_iterations
 animate = args.animate
 bounding_circles = args.bounding_circles
-                 
+lattice = args.lattice
 
-           
 # initialize plot and particles
 fig, axs = plt.subplots()
 axs.set_title(str(number_of_particles)+' points packed ~evenly in S1xS1')
 particle_dict = {}
 
-for particle_number in range(number_of_particles):
-    particle_dict[particle_number] = Particle(particle_number, random.random(), random.random())
+if lattice:
+    lattice_defining_vectors = find_best_lattice_defining_vectors(number_of_particles)
+    u,v = lattice_basis(lattice_defining_vectors, number_of_particles)
+    particle_number = 0
+    for i in range(lattice_defining_vectors[1],lattice_defining_vectors[0]+1):
+        for j in range(lattice_defining_vectors[2]+lattice_defining_vectors[3]+1):
+            if (0 <= i*u[0]+j*v[0]) and (i*u[0]+j*v[0] < 0.999999) and (0 <= i*u[1]+j*v[1]) and (i*u[1]+j*v[1] < 0.999999):
+                x = i*u[0]+j*v[0]
+                y = i*u[1]+j*v[1]
+                particle_dict[particle_number] = Particle(particle_number, x, y)
+                particle_number = particle_number+1
+else:        
+    for particle_number in range(number_of_particles):
+        particle_dict[particle_number] = Particle(particle_number, random.random(), random.random())
     
 for tile_x in range(-tile_range,tile_range+1):
         for tile_y in range(-tile_range,tile_range+1):
@@ -47,10 +59,18 @@ for tile_x in range(-tile_range,tile_range+1):
 rect = patches.Rectangle((0, 0), 1, 1, linewidth=2, edgecolor='r', facecolor='none')
 axs.add_patch(rect)
 
-# gradient descent to low-energy solution
-ln = axs.scatter([],[])
-min_energy = total_energy(particle_dict, tile_range, force_order)
+particles = [[],[]]
+for particle in particle_dict:
+            for tile_x in range(-tile_range,tile_range+1):
+                for tile_y in range(-tile_range,tile_range+1):
+                    particles[0].append(tile_x+particle_dict[particle].x)
+                    particles[1].append(tile_y+particle_dict[particle].y)
+ln = axs.scatter(particles[0], particles[1], color='black')
+plt.draw()
+plt.pause(0.001)
 
+# gradient descent to low-energy solution
+min_energy = total_energy(particle_dict, tile_range, force_order)
 for iteration in range(iterations):
     if (iteration+1) % search_block_iterations == 0:
         # return to best solution in last search block
@@ -82,13 +102,14 @@ for iteration in range(iterations):
                     #print(particle, particle_dict[particle].x, particle_dict[particle].y)
     ln = axs.scatter(particles[0], particles[1], color='black')
     
+    
     if animate==True:
         plt.draw()
         plt.pause(0.001)
 
 # draw bounding circles
-if bounding_circles:        
-    set_radii(particle_dict)        
+set_radii(particle_dict)
+if bounding_circles:                
     for particle in particle_dict:
         for tile_x in range(-tile_range,tile_range+1):
                 for tile_y in range(-tile_range,tile_range+1):
