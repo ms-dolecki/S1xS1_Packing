@@ -3,11 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from helper_functions import *
 import argparse
-import time
 
-# Test commit 3
-# Test commit 5
-# Test commit 6
 # get options from command line
 parser = argparse.ArgumentParser(
                     prog='S1xS1_Packing',
