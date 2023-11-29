@@ -5,6 +5,7 @@ from helper_functions import *
 import argparse
 import time
 
+# Test commit 3
 # get options from command line
 parser = argparse.ArgumentParser(
                     prog='S1xS1_Packing',
